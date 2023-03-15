@@ -1,5 +1,6 @@
 package com.skycore.db_encryption
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +12,7 @@ import com.skycore.db_encryption.databinding.ActivityMainBinding
 import com.skycore.db_encryption.misc.SQLCipherUtils
 import com.skycore.db_encryption.repository.cache.CommentRepository
 import com.skycore.db_encryption.repository.cache.DatabaseHandler
+import com.skycore.db_encryption.repository.cache.SQLDBHelper
 import com.skycore.db_encryption.repository.cache.UserRepository
 import com.skycore.db_encryption.repository.cache.entity.User
 import com.skycore.db_encryption.viewmodel.MainViewModel
@@ -64,24 +66,50 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun validateFields(): Boolean {
+        return binding.edtUsername.text.toString()
+            .isNotBlank() && binding.edtPassword.text.toString().isNotBlank()
+    }
+
+    private fun insertInRoom() {
+        //init viewModel and other observers
+        checkViewModelStatus()
+
+        if (binding.edtUsername.text.toString()
+                .isNotBlank() && binding.edtPassword.text.toString().isNotBlank()
+        ) {
+            //inserting user if fields are not empty
+            viewModel.insertUser(
+                User(
+                    0,
+                    binding.edtUsername.text.toString(),
+                    binding.edtPassword.text.toString()
+                )
+            )
+        } else {
+            //if either fields are empty fields
+            Toast.makeText(applicationContext, "Empty Fields!!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun insertInSqlite() {
+
+    }
+
+    private fun createSQLiteDB(){
+
+    }
+
     override fun onClick(p0: View?) {
         when (p0?.id) {
             binding.btnLogin.id -> {
-                //init viewModel and other observers
-                checkViewModelStatus()
+                if(validateFields()){
+                    //Room
+                    insertInRoom()
 
-                if (binding.edtUsername.text.toString()
-                        .isNotBlank() && binding.edtPassword.text.toString().isNotBlank()
-                ) {
-                    //inserting user if fields are not empty
-                    viewModel.insertUser(
-                        User(
-                            0,
-                            binding.edtUsername.text.toString(),
-                            binding.edtPassword.text.toString()
-                        )
-                    )
-                } else {
+                    //Sqlite
+//                    insertInSqlite()
+                }else{
                     //if either fields are empty fields
                     Toast.makeText(applicationContext, "Empty Fields!!", Toast.LENGTH_SHORT).show()
                 }
@@ -89,8 +117,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             binding.btnGetPass.id -> {
                 //init viewModel and other observers
                 checkViewModelStatus()
-
                 viewModel.getUser(binding.edtUsername.text.toString())
+
+                //for sqlite
+
             }
             binding.btnInsert.id -> {
                 //init viewModel and other observers
