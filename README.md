@@ -6,7 +6,7 @@ __________STEPS_____
 1. Run the project without using SupportFactory for creating DB instance.
 2. Insert records to later test the migrated data.
 3. Uncomment/Add the SupportFactory in DB instance creation.
-4. Delay the viewModel, repository initiaization (however DB instance is being called), because we need to call "sqlcipher_export" query to export plain/unencrypted DB to an encrypted one.
+4. Delay the viewModel, repository initialization (however DB instance is being called), because we need to call "sqlcipher_export" query to export plain/unencrypted DB to an encrypted one.
 5. Delete OG Database file.
 6. After migration, make any DB operation which first checks for viewmodel/oberserver initialization, then make the DB call.
 7. The new records will be inserted in the new DB and the old data is also saved.
